@@ -184,7 +184,8 @@ func checkCaptchaWithKey(captcha string) error {
 		return err
 	}
 
-	if body.Score <= 0.6999 {
+	fmt.Printf("Captcha score %f\n", body.Score)
+	if body.Score < 0.3 {
 		return errors.New("invalid captcha")
 	}
 
