@@ -10,7 +10,7 @@ export NODE="http://localhost:26657"
 export MNEMONIC="wisdom oil estate wait volume awkward cotton image business inside move tape fancy screen vendor tube anchor audit shoot ethics deputy swamp length tennis"
 
 export GOOGLE_API_KEY="AIzaSyBoegrmkH9lqH-VG1kTEXdMZwogxrz6U9k"
-export CAPTCHA_SITE_KEY="6LfIPO0aAAAAAG7oSw9JSmi6E58IRuhVQYzKShHl"
+export CAPTCHA_SITE_KEY="6Lca4qcbAAAAADg1NuxQ0lVA0LFideOlqc4ofdsY"
 export GOOGLE_PROJECT_ID="cudos-testnet"
 
 rm -Rf ./cudos-data
