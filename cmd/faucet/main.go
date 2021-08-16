@@ -8,16 +8,15 @@ import (
 	"flag"
 	"fmt"
 	"io/ioutil"
-	"math/big"
 	"net/http"
 	"strings"
 	"time"
 
 	log "github.com/sirupsen/logrus"
 
+	"github.com/cosmos/cosmos-sdk/types"
 	"github.com/tendermint/starport/starport/pkg/chaincmd"
 	chaincmdrunner "github.com/tendermint/starport/starport/pkg/chaincmd/runner"
-	"github.com/tendermint/starport/starport/pkg/cosmoscoin"
 	"github.com/tendermint/starport/starport/pkg/cosmosfaucet"
 	"github.com/tendermint/starport/starport/pkg/cosmosver"
 	"github.com/tendermint/starport/starport/pkg/xhttp"
@@ -37,7 +36,7 @@ type SiteVerifyResponse struct {
 type TransferRequest struct {
 	AccountAddress  string   `json:"address"`
 	Coins           []string `json:"coins"`
-	CaptchaResponse string   `json: "captchaResponse"`
+	CaptchaResponse string   `json:"captchaResponse"`
 }
 
 func main() {
@@ -115,12 +114,12 @@ func main() {
 			}
 
 			coin := req.Coins[0]
-			amount, denom, err := cosmoscoin.Parse(coin)
+			cosmosCoin, err := types.ParseCoinNormalized(coin)
 			if err == nil {
-				if amount > maxCredit {
+				if cosmosCoin.Amount.GT(types.NewIntFromUint64(maxCredit)) {
 					var transfers []cosmosfaucet.Transfer
 					t := cosmosfaucet.Transfer{
-						Coin:   denom,
+						Coin:   cosmosCoin.Denom,
 						Status: "error",
 						Error:  fmt.Sprintf("max credit (%d)", maxCredit),
 					}
@@ -133,13 +132,7 @@ func main() {
 					return
 				}
 
-				bigCoinAmount := new(big.Int).SetUint64(amount)
-				bigCoinMultiplier := new(big.Int).SetUint64(1000000000000)
-				bigCoinAmount.Mul(bigCoinAmount, bigCoinMultiplier)
-
-				req.Coins[0] = fmt.Sprintf("%sacudos", bigCoinAmount.String())
-				reqBytes, _ := json.Marshal(req)
-				rdr2 := ioutil.NopCloser(bytes.NewBuffer(reqBytes))
+				rdr2 := ioutil.NopCloser(bytes.NewBuffer(buf))
 				r.Body = rdr2
 				faucet.ServeHTTP(w, r)
 			}
@@ -184,8 +177,8 @@ func checkCaptchaWithKey(captcha string) error {
 		return err
 	}
 
-	fmt.Printf("Captcha score %f\n", body.Score)
 	if body.Score < 0.3 {
+		fmt.Printf("Captcha score %f\n", body.Score)
 		return errors.New("invalid captcha")
 	}
 
