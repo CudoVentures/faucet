@@ -121,7 +121,7 @@ func main() {
 					t := cosmosfaucet.Transfer{
 						Coin:   cosmosCoin.Denom,
 						Status: "error",
-						Error:  fmt.Sprintf("max credit (%d)", maxCredit),
+						Error:  fmt.Sprintf("maximum credit (%d)", maxCredit),
 					}
 
 					transfers = append(transfers, t)
