@@ -60,13 +60,14 @@ func main() {
 
 	if sdkVersion == string(cosmosver.Stargate) {
 		ccoptions = append(ccoptions,
-			chaincmd.WithVersion(cosmosver.StargateZeroFourtyAndAbove),
+			chaincmd.WithVersion(cosmosver.StargateFortyFourVersion),
 		)
 	} else {
-		ccoptions = append(ccoptions,
-			chaincmd.WithVersion(cosmosver.LaunchpadAny),
-			chaincmd.WithLaunchpadCLI(appCli),
-		)
+		log.Fatal("The chain is not using cosmossdk > 0.44")
+		// ccoptions = append(ccoptions,
+		// 	chaincmd.WithVersion(cosmosver.LaunchpadAny),
+		// 	chaincmd.WithLaunchpadCLI(appCli),
+		// )
 	}
 
 	cr, err := chaincmdrunner.New(context.Background(), chaincmd.New(appCli, ccoptions...))
