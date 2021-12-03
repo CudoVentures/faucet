@@ -3,9 +3,9 @@ module github.com/tendermint/faucet
 go 1.16
 
 require (
-	github.com/cosmos/cosmos-sdk v0.44.3
+	github.com/cosmos/cosmos-sdk v0.44.4
 	github.com/sirupsen/logrus v1.8.1
-	github.com/tendermint/starport v0.17.3
+	github.com/tendermint/starport v0.18.6
 	google.golang.org/genproto v0.0.0-20210602131652-f16073e35f0c
 )
 
