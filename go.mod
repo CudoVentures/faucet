@@ -2,6 +2,8 @@ module github.com/tendermint/faucet
 
 go 1.16
 
+replace github.com/cosmos/cosmos-sdk => github.com/CudoVentures/cosmos-sdk v0.0.0-20220111092913-4117cd46b688
+
 require (
 	github.com/cosmos/cosmos-sdk v0.44.5
 	github.com/sirupsen/logrus v1.8.1
