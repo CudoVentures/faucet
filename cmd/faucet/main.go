@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"strings"
 	"time"
+	"regexp"
 
 	log "github.com/sirupsen/logrus"
 
@@ -105,6 +106,14 @@ func main() {
 
 		var req TransferRequest
 		err := json.NewDecoder(rdr1).Decode(&req)
+
+		isValidCudosAddress, _ := regexp.MatchString(
+			"^cudos[0-9a-z]{39}$", 
+			req.AccountAddress)
+		
+		if !isValidCudosAddress {
+			http.Error(w, "Wrong address format", http.StatusUnauthorized)
+		}
 
 		if err == nil {
 			captchaErr := checkCaptchaWithKey(req.CaptchaResponse)
