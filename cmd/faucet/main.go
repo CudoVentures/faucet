@@ -91,7 +91,7 @@ func main() {
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		originHeader := r.Header.Get("Origin")
-		if originHeader == "http://localhost:3000" || originHeader == "http://104.154.17.186:3000" || originHeader == "http://explorer.cudos.org" || originHeader == "https://explorer.cudos.org" {
+		if originHeader == "http://localhost:3000" || originHeader == corsDomainPrivateTestnet || originHeader == corsDomainPublicTestnet {
 			w.Header().Set("Access-Control-Allow-Origin", originHeader)
 			w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 			w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")

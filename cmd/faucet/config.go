@@ -13,21 +13,23 @@ const (
 )
 
 var (
-	captchSiteKey   string
-	googleApiKey    string
-	googleProjectId string
-	port            int
-	keyringBackend  string
-	sdkVersion      string
-	keyName         string
-	keyMnemonic     string
-	keyringPassword string
-	appCli          string
-	defaultDenoms   string
-	creditAmount    uint64
-	maxCredit       uint64
-	nodeAddress     string
-	legacySendCmd   bool
+	captchSiteKey            string
+	googleApiKey             string
+	googleProjectId          string
+	port                     int
+	keyringBackend           string
+	sdkVersion               string
+	keyName                  string
+	keyMnemonic              string
+	keyringPassword          string
+	appCli                   string
+	defaultDenoms            string
+	creditAmount             uint64
+	maxCredit                uint64
+	nodeAddress              string
+	legacySendCmd            bool
+	corsDomainPublicTestnet  string
+	corsDomainPrivateTestnet string
 )
 
 func init() {
@@ -91,5 +93,13 @@ func init() {
 	flag.BoolVar(&legacySendCmd, "legacy-send",
 		environ.GetBool("LEGACY_SEND", false),
 		"whether to use legacy send command",
+	)
+	flag.StringVar(&corsDomainPublicTestnet, "cors-domain-public-testnet",
+		environ.GetString("CORS_DOMAIN_PUBLIC_TESTNET", ""),
+		"cors domain for public testnet",
+	)
+	flag.StringVar(&corsDomainPrivateTestnet, "cors-domain-private-testnet",
+		environ.GetString("CORS_DOMAIN_PRIVATE_TESTNET", ""),
+		"cors domain for private testnet",
 	)
 }
