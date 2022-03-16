@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"strings"
 	"time"
+	"regexp"
 
 	log "github.com/sirupsen/logrus"
 
@@ -91,7 +92,7 @@ func main() {
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		originHeader := r.Header.Get("Origin")
-		if originHeader == "http://localhost:3000" || originHeader == "http://104.154.17.186:3000" || originHeader == "http://explorer.cudos.org" || originHeader == "https://explorer.cudos.org" {
+		if originHeader == "http://localhost:3000" || originHeader == corsDomainPrivateTestnet || originHeader == corsDomainPublicTestnet {
 			w.Header().Set("Access-Control-Allow-Origin", originHeader)
 			w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 			w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
@@ -105,6 +106,14 @@ func main() {
 
 		var req TransferRequest
 		err := json.NewDecoder(rdr1).Decode(&req)
+
+		isValidCudosAddress, _ := regexp.MatchString(
+			"^cudos[0-9a-z]{39}$", 
+			req.AccountAddress)
+		
+		if !isValidCudosAddress {
+			http.Error(w, "Wrong address format", http.StatusUnauthorized)
+		}
 
 		if err == nil {
 			captchaErr := checkCaptchaWithKey(req.CaptchaResponse)
