@@ -3,8 +3,8 @@ package main
 import (
 	"flag"
 
-	"github.com/tendermint/starport/starport/pkg/cosmosfaucet"
-
+	"github.com/joho/godotenv"
+	"github.com/tendermint/faucet/customFaucet"
 	"github.com/tendermint/faucet/internal/environ"
 )
 
@@ -13,7 +13,7 @@ const (
 )
 
 var (
-	captchSiteKey            string
+	captchaSiteKey           string
 	googleApiKey             string
 	googleProjectId          string
 	port                     int
@@ -24,8 +24,9 @@ var (
 	keyringPassword          string
 	appCli                   string
 	defaultDenoms            string
-	creditAmount             uint64
-	maxCredit                uint64
+	fees                     string
+	creditAmount             string
+	maxCredit                string
 	nodeAddress              string
 	legacySendCmd            bool
 	corsDomainPublicTestnet  string
@@ -33,11 +34,14 @@ var (
 )
 
 func init() {
+
+	godotenv.Load()
+
 	flag.IntVar(&port, "port",
 		environ.GetInt("PORT", 8000),
 		"tcp port where faucet will be listening for requests",
 	)
-	flag.StringVar(&captchSiteKey, "captcha-site-key",
+	flag.StringVar(&captchaSiteKey, "captcha-site-key",
 		environ.GetString("CAPTCHA_SITE_KEY", ""),
 		"site key of recaptcha",
 	)
@@ -58,7 +62,7 @@ func init() {
 		"version of sdk (launchpad or stargate)",
 	)
 	flag.StringVar(&keyName, "account-name",
-		environ.GetString("ACCOUNT_NAME", cosmosfaucet.DefaultAccountName),
+		environ.GetString("ACCOUNT_NAME", customFaucet.DefaultAccountName),
 		"name of the account to be used by the faucet",
 	)
 	flag.StringVar(&keyMnemonic, "mnemonic",
@@ -74,16 +78,21 @@ func init() {
 		"name of the cli executable",
 	)
 	flag.StringVar(&defaultDenoms, "denoms",
-		environ.GetString("DENOMS", cosmosfaucet.DefaultDenom),
+		environ.GetString("DENOMS", customFaucet.DefaultDenom),
 		"denomination of the coins sent by default (comma separated)",
 	)
-	flag.Uint64Var(&creditAmount,
+	flag.StringVar(&creditAmount,
 		"credit-amount",
-		environ.GetUint64("CREDIT_AMOUNT", cosmosfaucet.DefaultAmount),
+		environ.GetString("CREDIT_AMOUNT", customFaucet.DefaultAmount),
 		"amount to credit in each request",
 	)
-	flag.Uint64Var(&maxCredit,
-		"max-credit", environ.GetUint64("MAX_CREDIT", cosmosfaucet.DefaultMaxAmount),
+	flag.StringVar(&fees,
+		"fees",
+		environ.GetString("FEES", customFaucet.DefaultFees),
+		"--fees flag amount",
+	)
+	flag.StringVar(&maxCredit,
+		"max-credit", environ.GetString("MAX_CREDIT", customFaucet.DefaultMaxAmount),
 		"maximum credit per account",
 	)
 	flag.StringVar(&nodeAddress, "node",
